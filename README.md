@@ -18,6 +18,6 @@ To-Do list that will help you manage your tasks. You will practice using loops, 
 **Stage 4: Bye, completed tasks**
   There are also completed tasks. Let's delete them.
 
-https://github.com/hyperskill/hs-test-python/archive/v2.0.1.tar.gz
-
-SQLAlchemy==1.3.16
+**Requirements:**
+ - https://github.com/hyperskill/hs-test-python/archive/v2.0.1.tar.gz
+ - SQLAlchemy==1.3.16
