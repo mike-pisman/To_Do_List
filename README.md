@@ -5,7 +5,7 @@ To-Do list can improve your work and personal life. You can use it to reduce the
 ## Learning outcomes
 To-Do list that will help you manage your tasks. You will practice using loops, conditions and statement branches. And also you will learn the basics of SQLAlchemy to manage SQLite database on python!
 
-## What you’ll do and what you’ll learn
+### Roadmap
 **Stage 1: Plan it!**
   Create a simple program that prints today's tasks.
 
@@ -18,6 +18,18 @@ To-Do list that will help you manage your tasks. You will practice using loops, 
 **Stage 4: Bye, completed tasks**
   There are also completed tasks. Let's delete them.
 
-**Requirements:**
+### Requirements:
  - https://github.com/hyperskill/hs-test-python/archive/v2.0.1.tar.gz
  - SQLAlchemy==1.3.16
+
+## Program Description
+The program will ask to enter input: 0-6 representing the menu options below:
+```
+1) Today's tasks - Print Tasks for Today
+2) Week's tasks - Print Tasks for this Week
+3) All tasks - Print all tasks
+4) Missed tasks - Print past due tasks(tasks with deadline before today)
+5) Add task - Ask user for task description and deadilne and adds new task to the database
+6) Delete task - Prints all task in enumerated list, asks user for id, and deletes chosen task from the database
+0) Exit - Exits the proggram an deletes all tasks
+```
