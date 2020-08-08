@@ -22,7 +22,7 @@ def main():
     session = Session()
 
     while True:
-        print("\n1) Today's tasks", "2) Week's tasks", "3) All tasks", "4) Add task", "0) Exit", sep="\n")
+        print("\n1) Today's tasks", "2) Week's tasks", "3) All tasks", "4) Missed tasks", "5) Add task", "6) Delete task", "0) Exit", sep="\n")
         command = int(input(">").strip())
         if command == 0:
             session.query(Task).delete()
@@ -60,12 +60,35 @@ def main():
                 print("Nothing to do!")
 
         if command == 4:
+            print("\nMissed tasks:")
+            rows = session.query(Task).order_by(Task.deadline < datetime.today().date()).all()
+            if len(rows) > 0:
+                for i, row in enumerate(rows, 1):
+                    print("{}. {}. {dt.day} {dt:%b}".format(i, row.task, dt=row.deadline))
+            else:
+                print("Nothing is missed!")
+
+        if command == 5:
             task = input("\nEnter task\n>")
             deadline = datetime.strptime(input("Enter deadline\n>"), "%Y-%m-%d")
             new_task = Task(task=task, deadline=deadline)
             session.add(new_task)
             session.commit()
             print("The task has been added!")
+
+        if command == 6:
+            print("\nChoose the number of the task you want to delete::")
+            rows = session.query(Task).order_by(Task.deadline).all()
+            if len(rows) > 0:
+                for i, row in enumerate(rows, 1):
+                    print("{}. {}. {dt.day} {dt:%b}".format(i, row.task, dt=row.deadline))
+            else:
+                print("Nothing to delete!")
+
+            task = rows[int(input("\n>")) - 1]
+            session.delete(task)
+            session.commit()
+            print("The task has been deleted!")
 
 if __name__ == '__main__':
     main()
