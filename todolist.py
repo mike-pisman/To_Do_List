@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, Date
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import sessionmaker
 
 
@@ -14,7 +14,7 @@ class Task(Base):
     deadline = Column(Date, default=datetime.today())
 
     def __repr__(self):
-        return "{}. {}".format(self.id, self.task)
+        return self.task
 
 def main():
     Base.metadata.create_all(engine)
@@ -22,26 +22,48 @@ def main():
     session = Session()
 
     while True:
-        print("\n1) Today's tasks", "2) Add task", "0) Exit", sep="\n")
-        command = int(input().strip())
+        print("\n1) Today's tasks", "2) Week's tasks", "3) All tasks", "4) Add task", "0) Exit", sep="\n")
+        command = int(input(">").strip())
         if command == 0:
             session.query(Task).delete()
             session.commit()
             print("\nBye!")
             break
 
-        elif command == 1:
-            print("\nToday:")
-            rows = session.query(Task).all()
+        if command == 1:
+            print("\nToday", "{dt.day} {dt:%b}".format(dt=datetime.now()))
+            rows = session.query(Task).filter(Task.deadline == datetime.today().date()).all()
             if len(rows) > 0:
                 print(*rows, sep="\n")
             else:
                 print("Nothing to do!")
 
-        elif command == 2:
-            print("\nEnter task")
-            new_row = Task(task=input())
-            session.add(new_row)
+        if command == 2:
+            for day in range(7):
+                t = datetime.today().date() + timedelta(days=day)
+                rows = session.query(Task).filter(Task.deadline == t).all()
+
+                print("\n{dt:%A} {dt.day} {dt:%b}:".format(dt=t))
+                if rows:
+                    for i, row in enumerate(rows, 1):
+                        print("{}. {}".format(i, row.task))
+                else:
+                    print("Nothing to do!")
+
+        if command == 3:
+            print("\nAll tasks:")
+            rows = session.query(Task).order_by(Task.deadline).all()
+            if len(rows) > 0:
+                for i, row in enumerate(rows, 1):
+                    print("{}. {}. {dt.day} {dt:%b}".format(i, row.task, dt=row.deadline))
+            else:
+                print("Nothing to do!")
+
+        if command == 4:
+            task = input("\nEnter task\n>")
+            deadline = datetime.strptime(input("Enter deadline\n>"), "%Y-%m-%d")
+            new_task = Task(task=task, deadline=deadline)
+            session.add(new_task)
             session.commit()
             print("The task has been added!")
 
